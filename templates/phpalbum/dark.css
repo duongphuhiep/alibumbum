@@ -1,0 +1,96 @@
+body{
+	background-color: black;
+}
+body.fixed{
+	background-color: #646464;
+}
+
+.body{
+	border:thick #EDDC98 solid;
+	background-color: #464646;
+}
+
+.box1 {
+	background-color: #545454;
+	border: medium solid #CCCCCC;
+}
+.boxtitle{
+	background-color:#646464;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 14px;
+	color: #FFFFCC;
+	border-bottom: medium solid #CCCCCC;
+	font-weight: bolder;
+}
+
+.smallboxtitle{
+	background-color:#646464;
+	font-family: "Times New Roman", Times, serif;
+	color: #FFFFCC;
+	font-weight: bolder;
+}
+.groupindex{
+	padding: 2px 10px 2px 10px;
+}
+.thmb {
+	border:5px #FFFFFF solid;
+}
+
+.bdr {
+	border: 1px #CCCCCC solid;
+}
+
+.te{
+	font-family: Arial;
+	font-size: 14px;
+	color: #b0a36c;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.gr{
+	color:#999999;
+}
+A:link.me{
+	font-family: Arial;
+	font-size: 12;
+	color: #DDCC88;
+	font-weight: bold;
+	text-decoration: none;
+}
+A:visited.me{
+	font-family: Arial;
+	font-size: 12;
+	color: #DDCC88;
+	font-weight: bold;
+	text-decoration: none;
+}
+A:hover.me{
+	font-family: Arial;
+	font-size: 12;
+	color: #DDCC88;
+	font-weight: bold;
+	text-decoration: underline;
+}
+A:active.me{
+	font-family: Arial;
+	font-size: 12;
+	color: #DDCC88;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+A.logo{
+	font-family: Arial;
+	font-size: 40px;
+	color: #EDDC98;
+	font-weight: bold;
+	text-decoration: none;
+	filter: Shadow(Color=#FF0000, Direction=225);
+}
+
+TD{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12;
+	color: #DDCC88;
+}

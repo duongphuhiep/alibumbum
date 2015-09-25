@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Alibumbum documentation</title>
+<style type="text/css">
+<!--
+body {
+font-size:14px;
+}
+li {
+padding:5px;
+}
+code {
+color:#003366;
+white-space:nowrap;
+}
+td {
+font-size:14px;
+line-height:24px;
+}
+h2 {
+font-size:20px;
+}
+h1 {
+padding-top:24px;
+font-size:32px;
+}
+
+-->
+</style>
+</head>
+
+<body bgcolor="black"><table bgcolor="white" cellpadding="70px" width="700px" align="center" style="border:medium #999999 double"><tr><td>
+
+<h1>Giới thiệu</h1>
+
+Gallery ảnh trên mạng: là một trang web để xem ảnh, bắt đầu với các trang mục lục với đầy các ảnh nhỏ nhỏ (thumbnails) bấm vào ảnh nhỏ thì ra ảnh to (resized images), bấm vào ảnh to thì ra ảnh gốc (original images).
+<p>
+Alibumbum là một Open Source PHP script giúp bạn tạo ra một gallery ảnh cá nhân trên mạng, không sử dụng bất kỳ một database nào. (<a href="http://duongphuhiep.free.fr/alibumbum">xem demo</a>)
+
+<h2>Đặc điểm</h2>
+
+<ul>
+<li>Tự động tạo "ảnh mục lục" (thumbnails) và "ảnh điều chỉnh kích cỡ" (resized images).
+<li>Đếm số lần xem ảnh, và viết chú thích (comment) cho ảnh.
+<li>Template đơn giản, gọn nhẹ dễ điều chỉnh (Bạn có thể tự tạo ra template cho riêng mình mà ko cần biết tí gì về PHP, chỉ cần biết viết HTML là đủ).
+<li>Riêng biệt hóa ảnh gốc với gallery (thư mục ảnh gốc bạn upload lên thế nào thì sẽ được giữ nguyên như vậy, ko như những gallery ảnh khác, thường làm xáo trộn hoặc thêm thắt linh tinh vào).
+<li>Home page: để ngỏ cho bạn tùy ý thiết kế, có khả năng hiển thị những ảnh được xem nhiều nhất trên trang này nếu bạn muốn.
+</ul>
+
+Tài liệu này phục vụ cho các bạn biết sơ về lập trình PHP, có ý định sử dụng hoặc phát triển tiếp Alibumbum. Đối với những bạn chỉ có nhu cầu sử dụng, và không biết nhiều lắm về lập trình PHP thì chỉ cần đọc đến hết phần viết về quản trị và bảo mật là được, thậm chí đến hết phần Cấu trúc một template nếu bạn có ý định tạo ra giao diện mới của Alibumbum cho riêng mình. Nếu phần nào nặng mùi lập trình quá, các bạn có thể đọc thoáng lên hoặc bỏ qua :)
+<p>
+Tôi không định giành nhiều thời gian để viết tài liệu cho Alibumbum lắm (nên lời văn, bố cục của tài liệu khá là "nông dân"). Đây chỉ là một project làm chơi bời trong thời gian nghỉ hè rảnh rỗi. Sau khi làm xong, tôi cũng không có ý định phát triển tiếp nữa, tùy cho các bạn trong cộng đồng mã nguồn mở "xử lý" tuân theo luật GNU GPL
+<h2>Archive gốc</h2>
+
+<table><tr><td>
+<img src="tree1.png"/>
+</td><td>
+<ul>
+<li> <code>photos</code> chứa ảnh gốc của bạn, là thư mục mà bạn sẽ động chạm nhiều nhất trong suốt quá trình sử dụng Alibumbum.
+<li><code>templates</code> chứa các templates của Alibumbum, rất mong các bạn khắp nơi làm giầu có thêm cho thư mục này với các kiểu mẫu template của chính bạn.
+<li><code>data</code> chứa những dữ liệu như là chú thích của các ảnh, số lần một ảnh được xem.
+<li><code>cache</code> các ảnh mục lục và ảnh điều chỉnh kích cỡ được tạo ra từ ảnh gốc và lưu trong này, mỗi lần cần đến là nó sẽ được lôi từ đây ra dùng, chương trình ko cần phải mất công tạo lại chúng từ ảnh gốc nữa.
+</ul>
+</td></tr></table>
+
+<h1>Cài đặt</h1>
+
+Bạn hầu như ko phải làm gì hết: copy ảnh gốc vào thư mục <code>photos</code> theo yêu cầu dưới đây rồi upload cả archive alibumbum lên mạng là xong.
+
+<h2>Thư mục <code>photos</code></h2>
+Copy ảnh gốc của bạn vào thư mục <code>photos</code> theo cấu trúc sau:<p>
+
+<img align="left" style="padding:0px 40px 0px 0px" src="tree2.png"/> 
+Alibumbum chỉ chấp nhận ảnh ở format gif, jpg, và png. Tên ảnh không được chứa dấu chấm. Ví dụ:
+<div style="margin-left:0.5cm">
+<code>my.father.jpg</code> <i>=> KO! (ko chấp nhận chứa dấu ".")</i><br />
+<code>my_father.bmp</code> <i>=> KO! (ko chấp nhận ảnh .bmp)</i><br />
+<code>my father.jpg</code> <i>=> OK</i></div>
+<p>
+Tất cả các ảnh phải nằm trong một nhóm ảnh (một thư mục con của thư mục <code>photos</code>). tên của những nhóm ảnh này cũng ko được chứa dấu chấm.
+<p>
+<em>Chú ý: trong Windows XP thường hay có những file <code>thumbs.db</code> ẩn trong các thư mục ảnh, bạn phải xóa hết những file ẩn này đi trước khi upload Album lên mạng. Tóm lại là thư mục <code>photos</code> này chỉ được chứa ảnh (gif, jpg, png), ko được chứa bất kỳ một file gì khác.</em>
+
+<h1>Tư tưởng chung</h1>
+
+Thực ra cả trang web chỉ có độc một trang <code>index.php</code> chạy, diện mạo của trang web thay đổi khi ta  truyền các tham số khác nhau cho nó:
+<ul>
+	<li>Muốn xem một nhóm thì dùng <code>index.php?page=groupname</code> => sẽ hiển thị các thumbnails (ảnh nhỏ nhỏ) của nhóm đó
+	<li>Muốn xem một ảnh thì <code>index.php?page=photo2006/my_family.gif</code> => sẽ hiển thị ảnh <code>my_family.gif</code> trong nhóm <code>photo2006</code> (đường dẫn đầy đủ tới ảnh gốc là <code>photos/photo2006/my_family.gif</code>)
+</ul>
+<p>
+Mọi ảnh trong album đều được phân biệt với nhau dựa vào tên nhóm và tên ảnh: Ví dụ: <code>photo2006/my_family.gif</code>. Để tiện truyền cái đường dẫn này đi, ta encode nó, sử dụng hàm <code>urlencode()</code> của PHP, decode lại nó như cũ bằng cách dùng hàm <code>urldecode()</code>. Ví dụ ta muốn xem ảnh  
+<code>photo2006/my family.gif</code>, ko thể truyền đi trực tiếp là <code>index.php?page=photo2006/my family.gif</code> mà fải encode đường dẫn trước trở thành <code>index.php?page=photo2006%2Fmy+family.gif</code>
+<p>
+Cố gắng để người sử dụng chỉ cần fải làm việc với ảnh gốc trong thư mục <code>photos</code> (Thêm ảnh thì cũng chỉ thêm ảnh gốc, xóa ảnh thì cũng chỉ cần xóa ảnh gốc, cập nhật ảnh thì cũng chỉ cập nhật ảnh gốc). Tóm lại khi làm bất cứ việc gì cũng fải nhìn vào thư mục photos, cố gắng adapte album dựa vào cấu trúc ảnh gốc này, và ko được động vào nó. 
+
+<h1>Quản lý templates</h1>
+
+Trong thư mục <code>templates</code> chứa nhiều bộ template, để biết template hiện hành của người sử dụng chọn là gì, mỗi lần <code>index.php</code> được load, nó sẽ nhìn vào cookie mang tên "template", nếu cookie này chưa tồn tại thì sử dụng <code>$DEFAULT_TEMPLATE</code> (trong <code>config.php</code>). Muốn đổi template thì chỉ đơn giản thay đổi giá trị của cookie "template" rồi refresh lại là xong (refresh lại đồng nghĩa với reload lại <code>index.php</code> vì tại bất kỳ thời điểm nào lúc bạn xem ảnh cũng là trang index.php hết, và script này đọc lại giá trị của cookie "template" mỗi lần nó được load). Script <code>set_template.php</code> sẽ làm việc này cho bạn, ví dụ lúc bạn chạy <code>set_template.php?tpl=family</code> nó sẽ thay giá trị của cookie "template" thành family, rồi refresh lại <code>index.php</code>
+<p>
+Một bộ template xuất hiện dưới dạng là một thư mục con của thư mục <code>templates</code>, tên của template chính là tên của những thư mục đó, khi sử dụng <code>set_template.php?tpl=templateName</code> thì <code>templateName</code> chính là tên của một trong số các thư mục này. Như vậy tên của một bộ template ko được chứa các kí tự đặc biệt như dấu cách (space), bởi ta fải truyền cái tên này như một tham số của <code>set_template.php</code>.
+<p>
+Chú ý: Lúc bạn đang chạy Alibumbum trên trình duyệt, bạn ko thể gõ trực tiếp lên thanh địa chỉ là <code>set_template.php?tpl=xyz</code> để đổi template hiện hành thành template xyz được vì bạn đang ở trong cùng một session với cái Alibumbum mà bạn đang chạy. Bạn chỉ có thể gõ được trực tiếp <code>set_template.php?tpl=xyz</code> vào trong một cửa sổ trình duyệt mới (ko cần đóng cái Alibumbum cũ cũng được).
+
+<h1>Quản trị và bảo mật</h1>
+
+<h2>Quản trị</h2>
+
+Tôi không có nhiều thời gian phát triển các công cụ quản trị cho album, bạn nên chủ động quản lý mọi thứ một cách thủ công vậy. Tuy nhiên, tôi cũng cung cấp cho các bạn một trang quản trị làm việc không quá bôi bác :D. Sử dụng trang này như sau:
+<p>
+Trong số các template của bạn, có một template hơi đặc biệt một chút với tên mặc định là <code>admin</code>. Mở ra cửa sổ trình duyệt mới, gõ vào <code>set_template.php?tpl=admin</code> để sử dụng template này, bạn sẽ thấy template này có nhiều thứ hơn template bình thường một chút.
+<ul>
+	<li>clean trasy file: Khi bạn xóa một số ảnh gốc ra khỏi gallery, những comments và những resized image của nó trong cache trở thành file rác, nhấn vào link này để xóa những file rác này đi.
+	<li>update: Nếu ảnh gốc bị thay thế, thì nhấn vào đó để update các resized image của nó trong cache. Trường hợp sử dụng: Thường thì khi bạn upload một số lượng lớn ảnh, hay bị các vấn đề về connection, một số ảnh upload bị hỏng chẳng hạn. Khi bạn phát hiện ra điều đó trong lúc sử dụng alibumbum, bạn chỉ cần upload lại những ảnh hỏng, rồi nhấn vào nút update tương ứng, các resized images cũ trong cache (của ảnh bị hỏng) sẽ được update lại.
+	<li>Mỗi comment đều được gắn thêm một link để delete nó. Thực ra bạn có thể làm điều này một cách thủ công là sửa nội dung file <code>data/comments.dat</code>
+</ul>
+
+<h2>Bảo mật</h2>
+
+Để cho người khác ko vào được trang admin của bạn, bạn chỉ cần đổi tên thư mục <code>templates/admin</code> thành ra <code>templates/xyz</code> nào đó với <code>xyz</code> do bạn tự nghĩ ra (nhớ là xyz không được sử dụng các ký tự đặc biệt như là dấu cách). Khi muốn vào trang admin, chỉ cần mở cửa sổ trình duyệt mới, rồi gõ vào đó <code>www.yourdomain.com/alibumbum/set_template.php?tpl=xyz</code>
+<p>
+Để cho nội dung của thư mục templates không bị lộ ra trên trình duyệt, bạn chỉ cần đặt vào đó một file<code>index.html</code> với nội dung gì cũng được. Trong release version của Alibumbum, tôi đã đặt vào đó giùm bạn một trang <code>index.php</code>.
+<p>
+Nếu tinh ý, bạn sẽ thấy vấn đề security của Alibumbum ko hề được chú trọng. Một cách nôm na thì cái gì cũng lồ lộ, trần trụi hết ra! Mục đích của tôi khi làm Alibumbum là tạo ra một cái gì đó thật đơn giản và hiệu quả. Tôi ko có áp dụng bất cứ một biện pháp che dấu gì. Một số ví dụ: 
+<ul>
+<li>Nếu như tất cả các đường link đều bị che dấu (để tre dấu cấu trúc cây của website), khi đó các files template *.tpl sẽ khó có thể là các file thuần html như bây giờ. 
+<li>Mọi dữ liệu nhập xuất đều bị encrypted... bạn sẽ thấy các địa chỉ sẽ là những chuỗi phức tạp vô nghĩa, chứ ko còn rõ ràng, đơn giản như bây giờ. Trong <code>cache.php</code> tôi cũng cung cấp cho các bạn hàm <code>rc4($data)</code> để encrypt và decrypt dữ liệu theo phương pháp RC4 (dựa vào khóa <code>$PASSWORD</code> trong <code>config.php</code> khóa này tùy ý bạn lựa chọn). Nhưng tôi đã không hề sử dụng hàm này.
+</ul>
+Cũng chính vì lý do security, tôi đã ko sử dụng database khi làm Alibumbum, và các chức năng quản trị Alibumbum cũng rất hạn chế. Thử tưởng tượng, người nào nắm được trang quản trị của alibumbum đi chăng nữa thì cũng chẳng thể phá hoại được gì, cùng lắm chỉ có thể xóa đi mấy cái comments trên Gallery. Tóm lại việc không sử dụng database để bảo vệ tuyệt đối account của bạn, còn việc không cung cấp nhiều chức năng quản trị cũng để giúp cho bạn bảo toàn được đống ảnh gốc, yên tâm là ko bao giờ bị mất (ngay cả bạn, nếu muốn xóa ảnh thì cũng bắt buộc phải dùng tài khoản FTP của bạn để xóa, chứ ko dùng Alibumbum để xóa được). Những biện fáp bảo mật này đều làm tăng tính đơn giản của Alibumbum theo phương châm, "ko có thì ko sợ bị phá" hehe .
+
+
+<h1>Cấu trúc một bộ template</h1>
+
+Một bộ template chứa 4 files chính: <code>index.tpl</code>, <code>photoview.tpl</code>, <code>welcome.tpl</code>, và <code>config.txt</code>. Những file *.tpl chỉ là những file html bình thường tuân thủ một số quy tắc. Nếu bạn đã từng sử dụng thư viện <code>template.inc</code> một module nhỏ nhỏ trong cái project to đùng PHPLib, thì sẽ thấy mấy file này khá dễ hiểu. (xem: <a href="ref/Templates_article.pdf" target="_blank">TplArticle.pdf</a> và <a href="ref/Templates_Manual.pdf" target="_blank">TplManual.pdf</a>). 
+<p>
+Trong bài viết này, tôi sẽ hướng dẫn bạn làm ra template mới mà ko cần quan tâm đến lập trình PHP hay <code>template.inc</code> (coi như bạn ko hề biết gì mấy thứ đó). Nhưng nếu bạn muốn đọc hiểu những gì xảy ra trong <code>index.php</code> thì nhất thiết phải biết về <code>template.inc</code>
+<h2>config.txt</h2>
+
+Mỗi template bắt buộc phải đi kèm với một file <code>config.txt</code> gồm 4 dòng, mỗi dòng là một con số với ý nghĩa như sau:
+<p>
+<table border="1">
+<tr><th>Dòng</th><th>Ý nghĩa</th><th>Giá trị thường dùng</th><th>biến PHP</th></tr>
+	<tr>
+		<td>1</td>
+		<td>Số lượng hàng ảnh thumbnails trong một trang mục lục</td>
+		<td>5-10</td>
+		<td><code>$MAX_ROWS</code></td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td>Số lượng cột ảnh thumbnails trong một trang mục lục</td>
+		<td>4-5</td>
+		<td><code>$MAX_COLS</code></td>
+	</tr>
+	<tr>
+		<td>3</td>
+		<td>Kích cỡ một thumbnails (ảnh mục lục)</td>
+		<td>80, 100, 120, 160,</td>
+		<td><code>$THUMBS_SIZE</code></td>
+	</tr>
+	<tr>
+		<td>4</td>
+		<td>Kích cỡ một ảnh sửa kích cỡ (ảnh xem)</td>
+		<td>500, 620, 640, 720</td>
+		<td><code>$VIEW_SIZE</code></td>
+	</tr>
+	<tr>
+		<td>5</td>
+		<td>Số lượng các ảnh được xem nhiều nhất bạn muốn trưng ra ở Home page</td>
+		<td><code>$MAX_COLS * k</code> (với <code>k</code> = 1,2,3)</td>
+		<td><code>$MOST_VIEW_PHOTOS</code></td>
+	</tr>
+</table>
+<p>
+Bảng trên chỉ khuyên bạn một vài giá trị thường được dùng, chứ không bắt buộc bạn sử dụng những giá trị đó, hãy sử dụng những giá trị đó hợp lý tùy theo template mà bạn đang xây dựng. Ví dụ có một số template để <code>$VIEW_SIZE=400</code> mới đẹp chẳng hạn.
+
+<h2>Đặc điểm chung của các files .tpl</h2>
+
+Các file tpl như đã nói chỉ là các file html bình thường bổ sung thêm khái niệm các biến và các block.
+<ul>
+<li>Hãy mở 3 files *.tpl của bộ template mang tên phpalbum ra (đây là bộ template đơn giản và đầy đủ nhất). Nhìn sơ qua <code>index.tpl</code> bạn để ý thấy có một số chỗ trong ngoặc nhọn ví dụ <code>{link_to_group}</code>,<code>{tpl}</code>... Đấy gọi là các biến (<strong>variable</strong>). Những chỗ trong ngoặc nhọn đó sẽ được <code>index.php</code> thay thế bằng những giá trị cụ thể, công việc thay thế này gọi là biên dịch (compile).
+<li>Chú ý những comment bắt đầu bằng <code>BEGIN</code> và <code>END</code>. Ví dụ như:
+<pre>&lt;!-- BEGIN main --&gt;
+....
+&lt;!-- END main --&gt;</pre>
+Những comment này định ra những block, trong ví dụ trên, ta đã định ra một <strong>block</strong> tên là <code>main</code>. Ý nghĩa của block trong biên dịch là:
+	<ul>
+		<li> Một block có thể bị thay thế hoàn toàn bởi một nội dung khác (Nếu là nội dung đó rỗng, có nghĩa là block bị biến mất hoàn toàn).
+		<li> Một block thường chứa nhiều biến ở trong (những phần trong ngoặc nhọn nằm trong block). Nội dung một block có thể được copy ra nhiều lần liên tiếp. Mỗi bản copy có thể nhận các giá trị biến bên trong thay đổi. Ví dụ trong những trang mục lục bạn có một block tên là thumbs mô tả một ảnh thumbnails sẽ được trình bày ra sao, index.php sẽ copy block này ra cho hàng loạt các ảnh khác. Trong block thumbnail này có biến là <code>{image_name}</code>, biến này có thể nhận những giá trị khác nhau trong những bản copy đó.
+	</ul>
+<p>
+(Tôi còn sử dụng những comment như kiểu là <code>&lt;!-- statistics: begin --&gt; &lt;!-- statistics: end --&gt;</code> mục đích chỉ để làm cho template được rõ ràng hơn, đó chỉ những comment bình thường ko mang ý nghĩa biên dịch nào cả)
+</ul>
+
+<h2>index.tpl</h2>
+
+Mô tả trang chủ hoặc các trang mục lục của một group nào đó. Bảng sau đây mô tả các block trong trang <code>index.tpl</code> và ý nghĩa của nó.
+<p>
+<table border="1">
+	<tr>
+		<th>Name</th>
+		<th>Ý nghĩa</th>
+	</tr>
+	<tr>
+		<td>index</td>
+		<td>Block này bao bọc trọn gói index.tpl, có nghĩa là khi bạn thay thế nó thành một nội dung khác, toàn bộ trang web hiện hành sẽ thay đổi. Ý nghĩa sử dụng: Khi người dùng nhấn vào một ảnh thumbnails toàn bộ nội dung trang web sẽ được thay thế thành <code>photoview.tpl</code> để xem ảnh đó</td>
+	</tr>
+	<tr>
+		<td>group</td>
+		<td>Mô tả cách hiển thị một group, trong bảng liệt kê các group. nó sẽ được copy ra nhiều lần cho tất cả các group trong album</td>
+	</tr>
+	<tr>
+		<td>main</td>
+		<td>Nội dung của block main thay đổi, lúc thì là <code>welcome.tpl</code>, khi đó index.php mang nội dung trang chủ. Còn lúc bình thường thì block này mang nội dung là trang mục lục của một nhóm nào đó</td>
+	</tr>
+	<tr>
+		<td>thumb</td>
+		<td>Mô tả một ô ảnh trong trang mục lục, block này sẽ được copy ra nhiều lần (với các giá trị khác nhau của các biến trong đó)</td>
+	</tr>
+</table>
+<p>
+Bố trí của các block này trong index: <br/><img src="tpl1.png"/>
+
+<h3>Những file .tpl khác</h3>
+
+<code>welcome.tpl</code> là home page của bạn, thường để giới thiệu về bản thân, và có khả năng hiển thị được một số ảnh được xem nhiều nhất.
+<p>
+<code>photoview.tpl</code> là trang hiển thị ảnh.
+<p>
+Khi làm một template mới, bạn nên bắt đầu với template phpalbum, sang sửa lại một chút là bạn sẽ có template của riêng mình. Nên test thử template mới của bạn trên nhiều trình duyệt khác nhau. Ví dụ như hai template tôi làm (phpalbum và family) hiển thị tốt trên Internet Explorer và Mozilla Firefox.
+
+<h1>Quản lý cache</h1>
+
+cache chỉ để lưu những resized images, và những resized images này chỉ được tạo ra khi cần thiết. Cấu trúc của cache sẽ đại loại như sau:<br />
+<img align="left" style="padding:0px 40px 0px 0px" src="tree3.png"/>
+Trong mỗi thư mục 100, 400, 620 đều chứa một cấu trúc cây giống như thư mục <code>photos</code> chỉ khác là:
+<ul>
+	<li>Kích cỡ các ảnh trong thư mục 100 là 100, trong thư mục 400 là 400 v.v.. Nói kích cỡ một ảnh là 100 có nghĩa kích cỡ max của nó giữa chiều dài và chiều rộng là 100 (chiều còn lại đổi proportionately với ảnh gốc).
+	<li>Format ảnh trong cache luôn là jpg với đuôi mở rộng là .jpg luôn viết thường.
+</ul>
+<code>cache.php</code> cung cấp cho bạn hàm <code>getResizedPhoto($photo, $size, $force)</code>
+Ví dụ sử dụng: <code>getResizedPhoto("photo2006/HIEP.JPG", 100, false)</code>
+Hàm này sẽ resize ảnh <code>photos/photo2006/HIEP.JPG</code> ra file <code>cache/100/photo2006/HIEP.jpg</code> và trả về chuỗi <code>"cache/100/photo2006/HIEP.jpg"</code>
+$force=false có nghĩa là nếu ảnh này đã tồn tại trong cache thì chỉ trả về đường dẫn thôi, nếu $force=true thì sẽ re-create lại ảnh này kể cả nó đã có trong cache
+
+<h1>Thư mục data</h1>
+
+Thư mục này chứa thông tin về số lần xem một ảnh (view time) và tất cả các chú thích (comments). Sau này fát triển thêm có thể nó sẽ chứa nhiều thông tin khác nữa. Hiện tại, cấu trúc của thư mục này đại loại như sau:
+<img align="left" style="padding:0px 40px 0px 0px" src="tree4.png"/>
+<ul>
+<li>Thư mục <code>vt</code> chứa một cấu trúc giống hệt thư mục photos chỉ khác là, tất cả các file *.vt đều là những text file, chỉ chứa một con số duy nhất, là số lần xem một ảnh. Ví dụ số lần: xem ảnh <code>photo2006/hiep.jpg</code> được lưu trong file <code>data/vt/photo2006/hiep.vt</code>
+<p>
+<code>cache.php</code> cung cấp cho bạn một số hàm để dễ dàng thao tác với hệ thống file *.vt này:
+	<ul>
+		<li><code>getViewTimeFile("photo2006/hiep.jpg")</code> trả về chuỗi <code>"data/vt/photo2006/hiep.vt"</code> là đường dẫn tới file .vt tương ứng của một ảnh
+		<li><code>getViewTime("photo2006/hiep.jpg")</code> trả về số lần xem ảnh <code>photo2006/hiep.jpg</code>
+		<li><code>increaseViewTime("photo2006/hiep.jpg", 2)</code> tăng số lần xem ảnh lên 2 (thay đổi giá trị lưu trong file <code>data/vt/photo2006/hiep.vt</code> bằng giá trị cũ cộng thêm 2).
+	</ul>
+<li>Tất cả các comments đều chứa trong files <code>comments.dat</code> Đây cũng là một file text, mỗi dòng trong đó là thông tin một comment. 
+	<ul>
+		<li>Trong <code>cache.php</code> bạn có class <code>Comment</code> để lưu giữ một comment, một comment bao gồm name, email, time and message, có thể đổi tất cả các thông tin này thành một chuỗi (method <code>toString</code>), rồi cũng có thể đổi ngược lại từ chuỗi này ra một đối tượng <code>Comment</code> (method <code>assignString()</code>). Ngoài ra bạn còn có method <code>addMeToCache()</code> để chèn đối tượng comment vào trong <code>comments.dat</code>, hoặc <code>removeMeFromCache()</code> để xem trong <code>comments.dat</code> có cái comment nào giống <code>this</code> ko thì loại nó đi.
+		<li><code>deleteComments("photo2006/hiep.jpg")</code> để xóa tất cả comments của ảnh <code>photo2006/hiep.jpg</code>
+		<li><code>cleanTrashyComments()</code> để xóa tất cả comments rác. Khi bạn xóa một ảnh nào đó trong album (chỉ cần xóa ảnh gốc của nó trong thư mục photos), những comment giành cho ảnh đó sẽ trở thành comments rác.
+		<li><code>getComments("photo2006/hiep.jpg")</code> trả lại tất cả các comment của ảnh <code>photo2006/hiep.jpg</code> (một array <code>Comment[]</code>)
+	</ul>
+</ul>
+
+<h1>Một số hàm khác</h1>
+
+Bạn thấy đấy <code>cache.php</code> là thư viện chính chứa tất cả các hàm cần thiết.
+<p>
+Lấy thông tin thống kê về album:
+<ul><code>
+	<li>countComments()
+	<li>countGroups()
+	<li>countPhotosInGroup($groupName)
+	<li>getStatistic()</code></ul>
+
+Liệt kê:
+<ul>
+	<li><code>getGroups()</code> trả về mảng chứa tên tất cả các nhóm ảnh, tức là mảng tên các thư mục con của thư mục <code>photos</code>(chú ý biến <code>$SORT_GROUP_BY_NAME</code>).
+	<li><code>getPhotos($groupName)</code> trả về mảng các ảnh trong một nhóm, tức là mảng các file ảnh nằm trong thư mục <code>photos/$groupname</code>. Ví dụ theo hình minh họa ở trên thì <code>getPhotos("group2")</code> sẽ trả lại mảng <code>("group2/image1.jpg","group2/image2.jpg","group2/image3.jpg")</code>
+	<li><code>getAllPhotos()</code> trả về mảng tất cả các ảnh trong album, sắp xếp theo số lần chúng được xem. Hàm này dùng để trích ra một vài ảnh được xem nhiều nhất.
+</ul>
+
+<h1>Lời kết</h1>
+
+Hai tháng hè đã kết thúc, việc fát triển Alibumbum cũng dừng lại theo (nghe hơi thê thảm nhỉ hic hic). Tuy nhiên nếu bạn nào có hứng thú muốn tiếp tục fát triển nó, thì xin rất hoan nghênh và tôi cũng sẽ sẵn sàng giúp đỡ các bạn. Tôi cũng rất mong chờ những phiên bản cải tiến, cùng những template mới của Alibumbum đến từ các bạn.
+
+Những cải tiến của Alibumbum có thể là:
+<ul>
+<li>Cải thiện việc bắt và xử lý lỗi (khi thư mục/file ko tồn tại)
+<li>Tăng cường các chức năng quản trị (cũng tức là phải tăng cường các biện pháp security):
+	<ul>
+		<li>Cho phép xóa ảnh trên trang quản trị (đồng nghĩa với xóa ảnh gốc và các râu ria của nó trong <code>cache</code>, <code>data</code> và <code>comments.dat</code>, các bạn có thể tham khảo hàm <code>deletePhoto($pathToPhoto)</code> trong <code>cache.php</code>)
+		<li>Cho phép đổi tên ảnh trên trang quản trị (đồng nghĩa với đổi tên các râu ria của nó trong <code>cache</code>, <code>data</code> và <code>comments.dat</code>)
+	</ul>
+<li>Bổ sung thêm tính năng nghe nhạc xem phim (tức là trong thư mục <code>photos</code> có thể chứa không những ảnh mà cả file nhạc lẫn file fim)
+</ul>
+
+
+</td></tr>
+</table>
+</body>
+</html>

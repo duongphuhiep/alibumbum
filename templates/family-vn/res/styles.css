@@ -1,0 +1,105 @@
+body {
+	background-color: #101010;
+	margin: 0px;
+	font-family: "Palatino Linotype", "Times New Roman", Times, sans-serif;
+	color: #9C7A4D;
+}
+
+td {
+	font-size:14px;
+}
+
+a {
+	text-decoration: none;
+	color: #9C7A4D;
+}
+
+a:hover.me {
+	text-decoration: underline;
+	color: #9C7A4D;
+}
+
+a.me {
+	text-decoration: none;
+	color: #9C7A4D;
+	font-weight:bold;
+}
+
+.thmb {
+	border:3px #9C7A4D double;
+}
+
+.bdr {
+	border:1px #9C7A4D solid;
+}
+
+.tab {
+	border:8px #9C7A4D ridge;
+	border-collapse:collapse;
+	background-image:url("bktile.jpg");
+}
+
+
+.comment {
+	color:#C9A575;
+	font-size:small;
+	font-style:italic;
+	font-size:12px;
+}
+
+.rightpart {
+	top: 55px;
+	left: 680px;
+	position: absolute;
+}
+
+#tabarea {
+	width:660px;
+	height:18px;
+	background-image:url(btnrow_bktile.jpg);
+}
+
+#leftarea {
+	width: 58px;
+	height: 432px;
+	background-image:url(left.jpg);
+}
+
+#thumbnailarea {
+	width: 566px;
+	height: 432px;
+	background-image:url(bktile.jpg);
+}
+
+#navarea {
+	width: 116px;
+	height: 432px;
+	background-image:url(bktile.jpg);
+}
+
+#imagearea {
+	width: 450px;
+	height: 432px;
+	background-image:url(bktile.jpg);
+}
+
+#rightarea {
+	width: 36px;
+	height: 432px;
+	background-image:url(right.jpg);
+	background-repeat: no-repeat;
+}
+
+#bottomarea {
+	width: 660px;
+	height: 40px;
+	background-image:url(bottom.jpg);
+	background-repeat: no-repeat;
+}
+
+#toparea {
+	width: 660px;
+	height: 60px;
+	background-image:url(top.jpg);
+	background-repeat: no-repeat;
+}
